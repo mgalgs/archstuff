@@ -13,7 +13,6 @@ conflicts=('pymacs')
 provides=('pymacs')
 source=()
 md5sums=()
-install=$pkgname.install
 
 
 _gitroot='https://github.com/pinard/Pymacs.git'

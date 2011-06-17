@@ -1,5 +1,0 @@
-post_install() {
-    echo "enable pymacs by adding to your .emacs:
-(require 'pymacs)
-(pymacs-load \"ropemacs\" \"rope-\")"
-}
