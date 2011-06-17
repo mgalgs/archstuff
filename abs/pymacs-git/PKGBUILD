@@ -1,7 +1,7 @@
 # Maintainer: Mitchel Humpherys <mitch.special@gmail.com>
 
 pkgname=pymacs-git
-pkgver=20110615
+pkgver=20110616
 pkgrel=1
 pkgdesc="Interface between Emacs List and Python (Python3 support)"
 url="https://github.com/pinard/Pymacs"
@@ -13,6 +13,8 @@ conflicts=('pymacs')
 provides=('pymacs')
 source=()
 md5sums=()
+install=$pkgname.install
+
 
 _gitroot='https://github.com/pinard/Pymacs.git'
 _gitname='pymacs'
