@@ -1,0 +1,41 @@
+# Maintainer: Mitchel Humpherys <mitch.special@gmail.com>
+
+pkgname=google-musicmanager
+pkgver=1
+pkgrel=1 
+pkgdesc="Google Music Manager"
+url="http://music.google.com"
+arch=('x86_64')
+license=('custom')
+install=$pkgname.install
+depends=('log4cxx')
+# makedepends=('rpmextract')
+
+if [ "${CARCH}" = 'x86_64' ]; then
+  source=('http://dl.google.com/linux/direct/google-musicmanager-beta_current_x86_64.rpm')
+  md5sums=('dfba1ff3708fe19506ead1094401b9b1')
+else
+  source=('http://dl.google.com/linux/direct/google-musicmanager-beta_current_i386.rpm')
+  md5sums=('323300d161fe7b74bce7b6a0ccbd1dfe')
+fi
+
+build() {
+  cd ${srcdir}
+  cp -ra etc ${pkgdir}
+  cp -ra opt ${pkgdir}
+  cp -ra usr ${pkgdir}
+
+  # custom license file
+  mkdir -p ${pkgdir}/usr/share/licenses/${pkgname}
+  install -D -m644 opt/google/musicmanager/thirdparty.html ${pkgdir}/usr/share/licenses/${pkgname}/
+
+  # .desktop file for menus
+  mkdir -p ${pkgdir}/usr/share/applications
+  install -D -m644 opt/google/musicmanager/google-musicmanager.desktop ${pkgdir}/usr/share/applications/
+
+  # icons for the .desktop file
+  for d in 16 32 48 128; do
+    mkdir -p ${pkgdir}/usr/share/icons/hicolor/${d}x${d}/apps
+    install -D -m644 opt/google/musicmanager/product_logo_${d}.png ${pkgdir}/usr/share/icons/hicolor/${d}x${d}/apps/google-musicmanager.png
+  done
+}
