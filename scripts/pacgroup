@@ -1,0 +1,63 @@
+#!/bin/bash
+
+## pacgroup
+## Group installed packages by various criteria
+##
+## Author: Mitchel Humpherys
+#
+# TODO:
+#  * Speed things up by invoking pacman -Qi once
+#    and parse it directly rather than invoking
+#    it for each package
+
+scriptname=$0
+
+usage()
+{
+    cat <<EOF
+Usage: ${scriptname##*/}
+
+Print info about packages by scraping \`pacman -Qi'
+
+Options:
+========
+	-p property		Display this property of each package. Defaults to License.
+	-q				Be quiet
+
+EOF
+    exit 1
+}
+
+
+verbose_mode=1
+groupby=License
+# parse command line options
+while getopts "hp:q" optionName; do
+    case "$optionName" in
+        h) usage ;;
+        p) groupby=$OPTARG ;;
+        q) verbose_mode=0 ;;
+        [?]) usage ;;
+    esac
+done
+
+allpkgs=( $(pacman -Q | cut -f1 -d' ') )
+
+declare -A groupedpkgs
+
+[[ $verbose_mode > 0 ]] && echo -e "grouping packages..."
+i=0
+for pkg in ${allpkgs[@]}; do
+    (( percentcomplete=(${i}*100)/${#allpkgs[@]} ))
+    [[ $verbose_mode > 0 ]] && echo -en "\r ${percentcomplete}%  (${i}/${#allpkgs[@]}) "
+    pkgvalue=$(pacman -Qi $pkg | grep "^${groupby}" | cut -d':' -f2 | cut -c2-)
+    groupedpkgs[$pkg]=$pkgvalue
+    (( i++ ))
+done
+[[ $verbose_mode > 0 ]] && echo " done"
+
+for i in "${!groupedpkgs[@]}"; do
+    echo "$i,${groupedpkgs[$i]}"
+done
+
+unset groupedpkgs
