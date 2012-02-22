@@ -1,6 +1,8 @@
 #!/bin/bash
 
-. ~/scripts/util.sh
+script_loc=$(dirname $0)
+
+. "${script_loc}/util.sh"
 
 for i in $(ls -1 /sys/class/net/ | sort); do
     bold_print_no_newline "$i"
